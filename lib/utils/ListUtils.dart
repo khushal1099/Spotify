@@ -74,34 +74,34 @@ List<Map<String, String>> hindiSongs = [
 ];
 List<Map<String, String>> images = [
   {
-    "image": "assets/images/1.png",
+    "image": "assets/images/posters/1.png",
   },
   {
-    "image": "assets/images/2.png",
+    "image": "assets/images/posters/2.png",
   },
   {
-    "image": "assets/images/3.png",
+    "image": "assets/images/posters/3.png",
   },
   {
-    "image": "assets/images/4.png",
+    "image": "assets/images/posters/4.png",
   },
   {
-    "image": "assets/images/5.png",
+    "image": "assets/images/posters/5.png",
   },
   {
-    "image": "assets/images/6.png",
+    "image": "assets/images/posters/6.png",
   },
   {
-    "image": "assets/images/7.png",
+    "image": "assets/images/posters/7.png",
   },
   {
-    "image": "assets/images/8.png",
+    "image": "assets/images/posters/8.png",
   },
   {
-    "image": "assets/images/9.png",
+    "image": "assets/images/posters/9.png",
   },
   {
-    "image": "assets/images/10.png",
+    "image": "assets/images/posters/10.png",
   },
 ];
 List<Map<String, String>> images1 = [
