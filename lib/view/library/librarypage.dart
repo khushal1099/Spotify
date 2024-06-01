@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:spotify/utils/SingerLists.dart';
 
 class LibraryPage extends StatefulWidget {
@@ -9,6 +10,8 @@ class LibraryPage extends StatefulWidget {
 }
 
 class _LibraryPageState extends State<LibraryPage> {
+  RxBool isView = false.obs;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,147 +139,123 @@ class _LibraryPageState extends State<LibraryPage> {
                 ),
                 Spacer(),
                 IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.grid_view,
-                    color: Colors.white,
+                  onPressed: () {
+                    isView.value = !isView.value;
+                  },
+                  icon: Obx(
+                    () => Icon(
+                      isView.value
+                          ? Icons.format_list_bulleted
+                          : Icons.grid_view,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
           SizedBox(
-            height: 13,
+            height: 20,
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: singer.length,
-              itemBuilder: (context, index) {
-                var data = singer[index];
-                if (index == 0) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 10),
-                    child: Row(
-                      children: [
-                        Container(
-                          clipBehavior: Clip.antiAlias,
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            image: DecorationImage(
-                              image: AssetImage(data["image"].toString()),
-                              fit: BoxFit.cover,
+          Obx(
+            () => isView.value
+                ? Expanded(
+                    child: GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 4,
+                        mainAxisSpacing: 4,
+                      ),
+                      itemCount: singer.length,
+                      itemBuilder: (context, index) {
+                        var data = singer[index];
+                        if (index == 0) {
+                          return Container(
+                            height: 200,
+                            width: 150,
+                            child: ContainerForPodcasts(
+                              imageUrl: data["image"].toString(),
+                              name: data["name"].toString(),
+                              podcastsname: data["podcasts_name"].toString(),
+                              skill: data["skill"].toString(),
+                              isView: true,
                             ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                data["podcasts_name"].toString(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 2,
-                              ),
-                              Text(
-                                "${data["skill"]} - ${data["name"]}",
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                if (data["index"] == "1") {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 10),
-                    child: Row(
-                      children: [
-                        Container(
-                          clipBehavior: Clip.antiAlias,
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white12,
-                          ),
-                          child: Icon(
-                            Icons.add,
-                            color: Colors.grey,
-                            size: 30,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Text(
-                            "Add Artist",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 17,
-                              fontWeight: FontWeight.w600,
+                          );
+                        }
+                        if (data["index"] == "1") {
+                          return Container(
+                            height: 200,
+                            width: 150,
+                            child: ContainerForSinger(
+                              parameter: "Add Artist",
+                              isView: true,
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-                if (data["index"] == "2") {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 10),
-                    child: Row(
-                      children: [
-                        Container(
-                          clipBehavior: Clip.antiAlias,
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: Colors.white12,
-                          ),
-                          child: Icon(
-                            Icons.add,
-                            color: Colors.grey,
-                            size: 30,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Text(
-                            "Add Podcasts",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 17,
-                              fontWeight: FontWeight.w600,
+                          );
+                        }
+                        if (data["index"] == "2") {
+                          return Container(
+                            height: 200,
+                            width: 150,
+                            child: ContainerForSinger(
+                              parameter: "Add Podcast",
+                              isView: true,
+                              isShape: true,
                             ),
-                          ),
-                        ),
-                      ],
+                          );
+                        }
+                        return ArtistView(
+                          imageUrl: data["image"].toString(),
+                          name: data["name"].toString(),
+                          skill: data["skill"].toString(),
+                          isView: true,
+                        );
+                      },
                     ),
-                  );
-                }
-                return ArtistListView(
-                  imageUrl: data["image"].toString(),
-                  name: data["name"].toString(),
-                  skill: data["skill"].toString(),
-                );
-              },
-            ),
+                  )
+                : Expanded(
+                    child: ListView.builder(
+                      itemCount: singer.length,
+                      itemBuilder: (context, index) {
+                        var data = singer[index];
+                        if (index == 0) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 10),
+                            child: ContainerForPodcasts(
+                              imageUrl: data["image"].toString(),
+                              name: data["name"].toString(),
+                              podcastsname: data["podcasts_name"].toString(),
+                              skill: data["skill"].toString(),
+                            ),
+                          );
+                        }
+                        if (data["index"] == "1") {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 10),
+                            child: ContainerForSinger(
+                              parameter: "Add Artist",
+                            ),
+                          );
+                        }
+                        if (data["index"] == "2") {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 10),
+                            child: ContainerForSinger(
+                              parameter: "Add Podcasts",
+                              isShape: true,
+                            ),
+                          );
+                        }
+                        return ArtistView(
+                          imageUrl: data["image"].toString(),
+                          name: data["name"].toString(),
+                          skill: data["skill"].toString(),
+                        );
+                      },
+                    ),
+                  ),
           ),
         ],
       ),
@@ -284,48 +263,50 @@ class _LibraryPageState extends State<LibraryPage> {
   }
 }
 
-class ArtistListView extends StatelessWidget {
+class ArtistView extends StatelessWidget {
   final String imageUrl;
   final String name;
   final String skill;
+  final bool isView;
 
-  const ArtistListView({
+  const ArtistView({
     super.key,
     required this.imageUrl,
     required this.name,
     required this.skill,
+    this.isView = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      child: Row(
-        children: [
-          Container(
-            clipBehavior: Clip.antiAlias,
-            height: 60,
-            width: 60,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              image: DecorationImage(
-                image: AssetImage(imageUrl),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+    return isView
+        ? Container(
+            height: 200,
+            width: 150,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
+                Container(
+                  clipBehavior: Clip.antiAlias,
+                  height: 75,
+                  width: 75,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.red,
+                  ),
+                  child: Image.asset(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                  ),
+                ),
                 Text(
                   name,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 17,
+                    fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
                 SizedBox(
                   height: 2,
@@ -338,9 +319,227 @@ class ArtistListView extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
+          )
+        : Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: Row(
+              children: [
+                Container(
+                  clipBehavior: Clip.antiAlias,
+                  height: 60,
+                  width: 60,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: AssetImage(imageUrl),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 2,
+                      ),
+                      Text(
+                        skill,
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+  }
+}
+
+class ContainerForPodcasts extends StatelessWidget {
+  final String imageUrl;
+  final String name;
+  final String podcastsname;
+  final String skill;
+  final bool isView;
+
+  const ContainerForPodcasts(
+      {super.key,
+      required this.imageUrl,
+      required this.name,
+      required this.podcastsname,
+      required this.skill,
+      this.isView = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return isView
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Container(
+                clipBehavior: Clip.antiAlias,
+                height: 75,
+                width: 75,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Image.asset(
+                  imageUrl,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              Text(
+                podcastsname,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+              SizedBox(
+                height: 2,
+              ),
+              Text(
+                "${skill} - ${name}",
+                style: TextStyle(
+                  color: Colors.grey,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          )
+        : Row(
+            children: [
+              Container(
+                clipBehavior: Clip.antiAlias,
+                height: 60,
+                width: 60,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  image: DecorationImage(
+                    image: AssetImage(imageUrl),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      podcastsname,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 2,
+                    ),
+                    Text(
+                      "${skill} - ${name}",
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+  }
+}
+
+class ContainerForSinger extends StatelessWidget {
+  final bool isShape;
+  final bool isView;
+  final String parameter;
+
+  const ContainerForSinger(
+      {super.key,
+      this.isShape = false,
+      this.isView = false,
+      required this.parameter});
+
+  @override
+  Widget build(BuildContext context) {
+    return isView
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Container(
+                height: 75,
+                width: 75,
+                decoration: BoxDecoration(
+                  borderRadius: isShape
+                      ? BorderRadius.circular(5)
+                      : BorderRadius.circular(40),
+                  color: Colors.white12,
+                ),
+                child: Icon(
+                  Icons.add,
+                  color: Colors.grey,
+                  size: 30,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Text(
+                  parameter,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          )
+        : Row(
+            children: [
+              Container(
+                clipBehavior: Clip.antiAlias,
+                height: 60,
+                width: 60,
+                decoration: BoxDecoration(
+                  borderRadius: isShape
+                      ? BorderRadius.circular(5)
+                      : BorderRadius.circular(40),
+                  color: Colors.white12,
+                ),
+                child: Icon(
+                  Icons.add,
+                  color: Colors.grey,
+                  size: 30,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Text(
+                  parameter,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          );
   }
 }
