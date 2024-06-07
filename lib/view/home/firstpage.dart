@@ -1,11 +1,14 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:marquee/marquee.dart';
+import 'package:spotify/controller/HomeController.dart';
 import 'package:spotify/view/home/current_song_page.dart';
 import 'package:spotify/view/home/homepage.dart';
 import 'package:spotify/view/library/librarypage.dart';
 import 'package:spotify/view/premium/premiumpage.dart';
 import 'package:spotify/view/search/searchpage.dart';
+import '../../utils/AudioPlayerServiceUtil.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({super.key});
@@ -16,6 +19,8 @@ class FirstPage extends StatefulWidget {
 
 class _FirstPageState extends State<FirstPage> {
   RxInt cIndex = 0.obs;
+  HomeController homeController = Get.put(HomeController());
+  AssetsAudioPlayer assetsAudioPlayer = AudioPlayerService.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -35,103 +40,146 @@ class _FirstPageState extends State<FirstPage> {
                 ],
               ),
             ),
-            SizedBox(
-              height: 60,
-              child: InkWell(
-                onTap: () {
-                  Get.to(
-                    () => CurrentSong(),
-                    transition: Transition.downToUp,
-                    duration: Duration(milliseconds: 300),
-                  );
-                },
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 5),
-                  height: 50,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: Color(0xff6C1C25),
-                      borderRadius: BorderRadius.circular(4)),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 5),
-                    child: Row(
-                      children: [
-                        Container(
-                          clipBehavior: Clip.antiAlias,
+            StreamBuilder<Playing?>(
+              stream: assetsAudioPlayer.current,
+              builder: (context, snapshot) {
+                var current = snapshot.data?.audio;
+                if (current != null)
+                  return SizedBox(
+                    height: 60,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 5),
+                      child: InkWell(
+                        onTap: () {
+                          Get.to(
+                            () => CurrentSong(),
+                            transition: Transition.downToUp,
+                            duration: Duration(milliseconds: 300),
+                          );
+                        },
+                        child: Container(
                           height: 50,
-                          width: 50,
+                          width: double.infinity,
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Image.network(
-                            "https://pagalfree.com/images/128Lutt%20Putt%20Gaya%20-%20Dunki%20128%20Kbps.jpg",
-                            frameBuilder: (context, child, frame,
-                                wasSynchronouslyLoaded) {
-                              if (frame == null) {
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                    color: Colors.grey,
+                              color: Color(0xff6C1C25),
+                              borderRadius: BorderRadius.circular(4)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 5),
+                            child: Row(
+                              children: [
+                                Container(
+                                  clipBehavior: Clip.antiAlias,
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
                                   ),
-                                );
-                              }
-                              return child;
-                            },
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          width: 160,
-                          height: 50,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                height: 20,
-                                child: Marquee(
-                                  text: " Lutt Putt Gaya",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w700),
+                                  child: Image.network(
+                                    current.audio.metas.image?.path ?? "",
+                                    frameBuilder: (context, child, frame,
+                                        wasSynchronouslyLoaded) {
+                                      if (frame == null) {
+                                        return Center(
+                                          child: CircularProgressIndicator(
+                                            color: Colors.grey,
+                                          ),
+                                        );
+                                      }
+                                      return child;
+                                    },
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "Rochak Kohli",
-                                style: TextStyle(
-                                  color: Colors.grey,
+                                SizedBox(
+                                  width: 10,
                                 ),
-                              ),
-                            ],
+                                Expanded(
+                                  child: Container(
+                                    // width: 160,
+                                    height: 50,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          height: 20,
+                                          child: Marquee(
+                                            text:
+                                                " ${current.audio.metas.title ?? ""}",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w700),
+                                          ),
+                                        ),
+                                        Text(
+                                          current.audio.metas.artist ?? "",
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    assetsAudioPlayer.previous();
+                                  },
+                                  icon: Icon(
+                                    Icons.skip_previous_rounded,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                StreamBuilder<bool>(
+                                  stream: assetsAudioPlayer.isPlaying,
+                                  builder: (context, snapshot) {
+                                    var playing = snapshot.data ?? false;
+                                    return StreamBuilder<bool>(
+                                      stream: assetsAudioPlayer.isBuffering,
+                                      builder: (context, snapshot1) {
+                                        if (snapshot1.data ?? false) {
+                                          return SizedBox(
+                                            height: 20,
+                                            width: 20,
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        }
+                                        return IconButton(
+                                          onPressed: () {
+                                            playing
+                                                ? assetsAudioPlayer.pause()
+                                                : assetsAudioPlayer.play();
+                                          },
+                                          icon: Icon(
+                                            playing
+                                                ? Icons.pause
+                                                : Icons.play_arrow_sharp,
+                                            color: Colors.white,
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    assetsAudioPlayer.next();
+                                  },
+                                  icon: Icon(
+                                    Icons.skip_next_rounded,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.surround_sound,
-                            color: Colors.white,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.add_circle_outline_sharp,
-                            color: Colors.white,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.play_arrow_sharp,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              ),
+                  );
+                return SizedBox();
+              },
             ),
           ],
         ),

@@ -176,61 +176,30 @@ class _SearchPageState extends State<SearchPage> {
                               SizedBox(
                                 height: 20,
                               ),
-                              ListView.builder(
+                              GridView.builder(
                                 padding: EdgeInsets.zero,
                                 shrinkWrap: true,
                                 physics: NeverScrollableScrollPhysics(),
+                                gridDelegate:
+                                    SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 1.6,
+                                ),
                                 itemCount: images.length,
                                 itemBuilder: (context, index) {
                                   var data = images[index];
-                                  var data1 = images1[index];
-                                  return Column(
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Container(
-                                              height: 103,
-                                              width: 169.5,
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey,
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                image: DecorationImage(
-                                                  image: AssetImage(
-                                                    data["image"].toString(),
-                                                  ),
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 15,
-                                          ),
-                                          Expanded(
-                                            child: Container(
-                                              height: 103,
-                                              width: 169.5,
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey,
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                image: DecorationImage(
-                                                  image: AssetImage(
-                                                    data1["image"].toString(),
-                                                  ),
-                                                  fit: BoxFit.cover,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                  return Container(
+                                    margin: EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey,
+                                      borderRadius: BorderRadius.circular(10),
+                                      image: DecorationImage(
+                                        image: AssetImage(
+                                          data["image"].toString(),
+                                        ),
+                                        fit: BoxFit.cover,
                                       ),
-                                      SizedBox(
-                                        height: 15,
-                                      ),
-                                    ],
+                                    ),
                                   );
                                 },
                               ),

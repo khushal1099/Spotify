@@ -259,9 +259,6 @@ class _PremiumPlansState extends State<PremiumPlans> {
           color: Color(0xffFFD2D7),
           stitle1: '\$119 for 2 months',
           stitle2: '\$119/month after',
-          p1: '1 Premium account',
-          p2: 'Cancel anytime',
-          p3: 'Subscribe or one-time payment',
           points: [
             '1 Premium account',
             'Cancel anytime',
@@ -277,10 +274,12 @@ class _PremiumPlansState extends State<PremiumPlans> {
           color: Color(0xffA5BBD2),
           stitle1: '\$179 for 2 months',
           stitle2: '\$179/month after',
-          p1: 'Up to 6 Premium accounts',
-          p2: 'Control content marked as explicit',
-          p3: 'Cancel anything',
-          p4: 'Subscribe or one-time payment',
+          points: [
+            'Up to 6 Premium accounts',
+            'Control content marked as explicit',
+            'Cancel anything',
+            'Subscribe or one-time payment',
+          ],
           endcontent:
               '\t\t\t\t\$179 for 2 months, then \$179 per months after. Offer only\navailable if you haven\'t tried Premium before. For up to 6 family\n\t\t\t\t\t\t\t\tmembers residing at the same address. ',
           rebentitle: '\$179 for 2 months',
@@ -292,9 +291,11 @@ class _PremiumPlansState extends State<PremiumPlans> {
           color: Color(0xffFFC863),
           stitle1: '\$149 for 2 months',
           stitle2: '\$149/month after',
-          p1: '2 Premium accounts',
-          p2: 'Cancel anything',
-          p3: 'Subscribe or one-time payment',
+          points: [
+            '2 Premium accounts',
+            'Cancel anything',
+            'Subscribe or one-time payment',
+          ],
           endcontent:
               '\t\t\t\t\$149 for 2 months, then \$149 per month after. Offer only\navailable if you haven\'t tried Premium before.For couples who\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\treside at the same address. ',
           rebentitle: '\$149 for 2 months',
@@ -305,10 +306,12 @@ class _PremiumPlansState extends State<PremiumPlans> {
           color: Color(0xffC5B1D4),
           stitle1: '\$59 for 2 months',
           stitle2: '\$59/month after',
-          p1: '1 Verified Premium accounts',
-          p2: 'Discount for eligible students',
-          p3: 'Cancel anything',
-          p4: 'Subscribe or one-time payment',
+          points: [
+            '1 Verified Premium accounts',
+            'Discount for eligible students',
+            'Cancel anything',
+            'Subscribe or one-time payment',
+          ],
           isLine: true,
           isSecondbutton: false,
           endcontent:
@@ -328,10 +331,7 @@ class PremiumContainer extends StatelessWidget {
   final String heading;
   final String stitle1;
   final String stitle2;
-  final String p1;
-  final String p2;
-  final String p3;
-  final String? p4;
+
   final String buttoncontent;
   final String endcontent;
   final bool isLine;
@@ -343,10 +343,6 @@ class PremiumContainer extends StatelessWidget {
     required this.color,
     required this.stitle1,
     required this.stitle2,
-    required this.p1,
-    required this.p2,
-    required this.p3,
-    this.p4,
     required this.endcontent,
     required this.rebentitle,
     required this.heading,
@@ -451,31 +447,33 @@ class PremiumContainer extends StatelessWidget {
                   height: 5,
                 ),
                 Column(
-                  children: points.map((e) => Row(
-                    children: [
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Container(
-                        height: 5,
-                        width: 5,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        e,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  )).toList(),
+                  children: points
+                      .map((e) => Row(
+                            children: [
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Container(
+                                height: 5,
+                                width: 5,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                e,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ))
+                      .toList(),
                 ),
                 SizedBox(
                   height: 25,
@@ -556,4 +554,3 @@ class PremiumContainer extends StatelessWidget {
     );
   }
 }
-
