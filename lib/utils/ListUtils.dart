@@ -733,33 +733,33 @@ List<Map<String, String>> images = [
     "image": "assets/images/posters/10.png",
   },
   {
-    "image": "assets/images/11.png",
+    "image": "assets/images/posters/11.png",
   },
   {
-    "image": "assets/images/12.png",
+    "image": "assets/images/posters/12.png",
   },
   {
-    "image": "assets/images/13.png",
+    "image": "assets/images/posters/13.png",
   },
   {
-    "image": "assets/images/14.png",
+    "image": "assets/images/posters/14.png",
   },
   {
-    "image": "assets/images/15.png",
+    "image": "assets/images/posters/15.png",
   },
   {
-    "image": "assets/images/16.png",
+    "image": "assets/images/posters/16.png",
   },
   {
-    "image": "assets/images/17.png",
+    "image": "assets/images/posters/17.png",
   },
   {
-    "image": "assets/images/18.png",
+    "image": "assets/images/posters/18.png",
   },
   {
-    "image": "assets/images/19.png",
+    "image": "assets/images/posters/19.png",
   },
   {
-    "image": "assets/images/20.png",
+    "image": "assets/images/posters/20.png",
   },
 ];
